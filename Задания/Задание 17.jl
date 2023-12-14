@@ -1,31 +1,31 @@
 using HorizonSideRobots
-rob = Robot("untitled.sit", animate = true)
+rob = Robot("Zadania8,17.sit", animate = true)
 
-function spiral!(st_cond, r)
-    s = Ost
-    n = 1
-    while !st_cond()
+function spiral!(stop_condition, robot)
+    side = Ost
+    dlina_storoni = 1
+    while !stop_condition()
         for i in 1:2
-            nmove!(st_cond, r, s, n)
-            s = povorot(s)
+            move!(stop_condition, robot, side, dlina_storoni)
+            side = povorot(side)
         end
-        n += 1
+        dlina_storoni += 1
     end
 end
 
-function povorot(s)
-    return HorizonSide(mod(Int(s) + 1, 4))
+function povorot(side)
+    return HorizonSide(mod(Int(side) + 1, 4))
 end
 
-function try_move!(st_cond, r, side)
-    if !st_cond()     
-        move!(r, side)
+function try_move!(stop_condition, robot, side)
+    if !stop_condition()     
+        move!(robot, side)
     end
 end
 
-function nmove!(st_cond, r, side, n)
-    for i in 1:n
-        try_move!(st_cond, r, side)
+function HorizonSideRobots.move!(stop_condition::Function, robot::Robot, side::HorizonSide, num::Integer)
+    for i in 1:num
+        try_move!(stop_condition, robot, side)
     end
 end
 
