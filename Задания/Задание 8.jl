@@ -1,15 +1,15 @@
 using HorizonSideRobots
-r = Robot("untitled.sit", animate = true)
+r = Robot("Zadania8,17.sit", animate = true)
 
-function findmark!(r)
-    s = Ost
-    n = 1
+function findmark!(robot)
+    side = Ost
+    dlina_storoni = 1
     while  ! ismarker(r)
         for i in 1:2
-            nmove!(r, s, n)
-            s = povorot(s)
+            move!(robot, side, dlina_storoni)
+            side = povorot(side)
         end
-        n += 1
+        dlina_storoni += 1
     end
 end
 
@@ -17,10 +17,10 @@ function povorot(s)
     return HorizonSide(mod(Int(s) + 1, 4))
 end
 
-function nmove!(r, side, n)
-    for i in 1:n
-        if !ismarker(r)
-            move!(r, side)
+function HorizonSideRobots.move!(robot::Robot, side::HorizonSide, num::Integer)
+    for i in 1:num
+        if !ismarker(robot)
+            move!(robot, side)
         end
     end
 end
