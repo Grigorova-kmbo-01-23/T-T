@@ -1,15 +1,15 @@
 using HorizonSideRobots
-r = Robot("ui.sit", animate=true)
+r = Robot("untitled.sit", animate=true)
 
 function pryamoi_krest!(robot)
-    for s in [Nord, Ost, Sud, West]
-        while isborder(robot, s) == 0
-            move!(robot, s)
+    for sides in [Nord, Ost, Sud, West]
+        while isborder(robot, sides) == 0
+            move!(robot, sides)
             putmarker!(robot)
         end
-        s = HorizonSide(mod(Int(s) + 2 , 4))
+        sides = HorizonSide(mod(Int(sides) + 2 , 4))
         while ismarker(robot) == 1
-            move!(robot, s)
+            move!(robot, sides)
         end
     end
     putmarker!(robot)

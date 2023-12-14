@@ -1,39 +1,39 @@
 using HorizonSideRobots
-r = Robot("ui.sit", animate=true)
+r = Robot("untitled.sit", animate=true)
  
-function per_i_obr!(robot)
-    ver, gor = v_ugol!(robot, Sud, West)
-    per!(robot)
-    nmove!(robot, Nord, ver)
-    nmove!(robot, Ost, gor)
+function perimetr_i_na_start!(robot)
+    shagov_po_vertikali, shagov_po_gorizontali = v_ugol!(robot, Sud, West)
+    perimetr!(robot)
+    move!(robot, Nord, shagov_po_vertikali)
+    move!(robot, Ost, shagov_po_gorizontali)
 end
 
-function per!(robot)
+function perimetr!(robot)
     for i in [Nord, Ost, Sud, West]
         while isborder(r, i) == false
-            move!(r, i)
-            putmarker!(r)
+            move!(robot, i)
+            putmarker!(robot)
         end
     end
 end
 
-function nmove!(rob, side, n)
-    for i in 1:n
-        move!(rob, side)
+function HorizonSideRobots.move!(robot, side, num)
+    for i in 1:num
+        move!(robot, side)
     end
 end
 
-function v_ugol!(rob, side1, side2)
-    n1, n2 =  0, 0
-    while ! isborder(rob, side2)
-        move!(rob, side2)
-        n2 += 1
+function v_ugol!(robot, side1, side2)
+    koordinaty_po_side1, koordinaty_po_side2 =  0, 0
+    while ! isborder(robot, side2)
+        move!(robot, side2)
+        koordinaty_po_side2 += 1
     end
-    while ! isborder(rob, side1)
-        move!(rob, side1)
-        n1 += 1
+    while ! isborder(robot, side1)
+        move!(robot, side1)
+        koordinaty_po_side1 += 1
     end
-    return n1, n2
+    return koordinaty_po_side1, koordinaty_po_side2
 end
 
-per_i_obr!(r)
+perimetr_i_na_start!(r)

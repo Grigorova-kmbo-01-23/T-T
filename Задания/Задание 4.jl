@@ -1,23 +1,30 @@
 using HorizonSideRobots
-r = Robot("ui.sit", animate=true)
+r = Robot("untitled.sit", animate=true)
 
 function kosoi_krest!(robot)
-    for a in [Nord, Sud]
-        for b in [Ost, West]
-            while (isborder(robot, a) + isborder(robot, b)) == 0
-                move!(robot, a)
-                move!(robot, b)
-                putmarker!(robot)
-            end
-            a = HorizonSide(mod(Int(a) + 2 , 4))
-            b = HorizonSide(mod(Int(b) + 2 , 4))
-            while ismarker(robot) == 1
-                move!(robot, a)
-                move!(robot, b)
-            end
+    sides = ((Nord,Ost), (Sud,Ost), (Sud,West), (Nord,West))
+    for s in sides
+        while isborder(robot, s) == 0
+            move!(robot, s)
+            putmarker!(robot)
+        end
+        s = inverse(s)
+        while ismarker(robot) == 1
+            move!(robot, s)
         end
     end
     putmarker!(robot)
 end
+
+HorizonSideRobots.isborder(robot, side::Tuple{HorizonSide, HorizonSide}) = isborder(robot, side[1]) || isborder(robot, side[2])
+
+function HorizonSideRobots.move!(r::Robot, s::Tuple{HorizonSide, HorizonSide})
+    move!(r, s[1])
+    move!(r, s[2])
+end
+
+inverse(s::HorizonSide) = HorizonSide(mod(Int(s) + 2 , 4))
+
+inverse(s::Tuple{HorizonSide, HorizonSide}) = inverse.(s)
 
 kosoi_krest!(r)

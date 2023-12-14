@@ -1,53 +1,54 @@
 using HorizonSideRobots
-r = Robot("ui.sit", animate=true)
+r = Robot("untitled.sit", animate=true)
  
-function all_i_obr!(robot)
-    ver, gor = v_ugol!(robot, Sud, West)
+function all_i_na_start!(robot)
+    shagov_po_vertikali, shagov_po_gorizontali = v_ugol!(robot, Sud, West)
     all!(robot)
-    nmove!(robot, Nord, ver)
-    nmove!(robot, Ost, gor)
+    move!(robot, Nord, shagov_po_vertikali)
+    move!(robot, Ost, shagov_po_gorizontali)
 end
 
 function all!(robot)
-    s = Nord
+    side_now = Nord
     while isborder(robot, Ost) == 0
         putmarker!(robot)
-        while isborder(robot, s) == 0
-            move!(robot, s)
+        while isborder(robot, side_now) == 0
+            move!(robot, side_now)
             putmarker!(robot)
         end
-        s = HorizonSide(mod(Int(s) + 2 , 4))
+        side_now = HorizonSide(mod(Int(side_now) + 2 , 4))
         move!(robot, Ost)
     end
     putmarker!(robot)
-    while isborder(robot, s) == 0
-        move!(robot, s)
+    while isborder(robot, side_now) == 0
+        move!(robot, side_now)
         putmarker!(robot)
     end
-    for i in [Sud, West]
-        while isborder(robot, i) == 0
-            move!(robot, i)
+    for side in [Sud, West]
+        while isborder(robot, side) == 0
+            move!(robot, side)
         end
     end
 end
 
-function nmove!(rob, side, n)
-    for i in 1:n
-        move!(rob, side)
+function HorizonSideRobots.move!(robot, side, num)
+    for i in 1:num
+        move!(robot, side)
     end
 end
 
-function v_ugol!(rob, side1, side2)
-    n1, n2 =  0, 0
-    while ! isborder(rob, side2)
-        move!(rob, side2)
-        n2 += 1
+function v_ugol!(robot, side1, side2)
+    koordinaty_po_side1, koordinaty_po_side2 =  0, 0
+    while ! isborder(robot, side2)
+        move!(robot, side2)
+        koordinaty_po_side2 += 1
     end
-    while ! isborder(rob, side1)
-        move!(rob, side1)
-        n1 += 1
+    while ! isborder(robot, side1)
+        move!(robot, side1)
+        koordinaty_po_side1 += 1
     end
-    return n1, n2
+    return koordinaty_po_side1, koordinaty_po_side2
 end
 
-all_i_obr!(r)
+
+all_i_na_start!(r)
