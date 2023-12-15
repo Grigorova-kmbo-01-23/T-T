@@ -1,92 +1,90 @@
 using HorizonSideRobots
-r = Robot("with_two_rectangles.sit", animate=true)
+r = Robot("Zadanie5.sit", animate=true)
  
-function two_per!(rob)
-    ver, gor = v_ugol_schet!(rob, Sud, West)
-    per!(rob)
-    poisk!(rob)
-    obv!(rob)
-    v_ugol_schet!(rob, Sud, West)
-    obr!(rob, ver, Nord, gor, Ost)
+function dva_perimetra_i_na_start!(robot)
+    shagov_po_vertikali, shagov_po_gorizontali = v_ugol!(robot, Sud, West)
+    vneshnii_perimetr!(robot)
+    poisk_vnutrennego_pryamougolnica!(robot)
+    vnutrennii_perimetr!(robot)
+    v_ugol!(robot, Sud, West)
+    na_start!(robot, shagov_po_vertikali, Nord, shagov_po_gorizontali, Ost)
 end
 
-function obv!(rob)
-    for i in [Ost, Nord, West, Sud, Ost]
-        putmarker!(rob)
-        k = HorizonSide(mod(Int(i) - 1, 4))
-        while isborder(rob, i)
-            move!(rob, k)
-            putmarker!(rob)
+function vnutrennii_perimetr!(robot)
+    for border_side in [Ost, Nord, West, Sud, Ost]
+        putmarker!(robot)
+        move_side = HorizonSide(mod(Int(border_side) - 1, 4))
+        while isborder(robot, border_side)
+            move!(robot, move_side)
+            putmarker!(robot)
         end
-        move!(rob, i)
+        move!(robot, border_side)
     end
 end 
 
-function per!(rob)
-    for i in [Nord, Ost, Sud, West]
-        while isborder(r, i) == false
-            move!(rob, i)
-            putmarker!(rob)
+function vneshnii_perimetr!(robot)
+    for side in [Nord, Ost, Sud, West]
+        while isborder(robot, side) == false
+            move!(robot, side)
+            putmarker!(robot)
         end
     end
 end
 
-function v_ugol_schet!(rob, side1, side2)
-    n1 = 0
-    n2 = 0
-    while isborder(rob, side1) == 0 || isborder(rob, side2) == 0
-        if isborder(rob, side2) == 0
-            move!(rob, side2)
-            n2 += 1
-        end
-        if isborder(rob, side1) == 0
-            move!(rob, side1)
-            n1 += 1
-        end
-    end
-    return n1, n2
-end
-
-function poisk!(rob)
-    s = Nord
-    while isborder(rob, Ost) == 0 
-        while isborder(rob, s) == 0
-            move!(rob, s)
-            if isborder(rob, Ost) == 1
+function poisk_vnutrennego_pryamougolnica!(robot)
+    side = Nord
+    while isborder(robot, Ost) == 0 
+        while isborder(robot, side) == 0
+            move!(robot, side)
+            if isborder(robot, Ost) == 1
                 break
             end
         end
-        if isborder(rob, Ost) == 0
-            s = HorizonSide(mod(Int(s)+ 2, 4))
-            move!(rob, Ost)
+        if isborder(robot, Ost) == 0
+            side = HorizonSide(mod(Int(side)+ 2, 4))
+            move!(robot, Ost)
         else
             break
         end
     end
 end
 
-function obr!(rob, n1, side1, n2, side2)
-    f = 0
-    nmove!(rob, side1, n1)
-    for i in 1:n2
-        if ! isborder(rob, side2)
-            move!(rob, side2)
+function na_start!(robot, shagov_v_side1, side1, shagov_v_side2, side2)
+    flag = 0
+    move!(robot, side1, shagov_v_side1)
+    for i in 1:shagov_v_side2
+        if ! isborder(robot, side2)
+            move!(robot, side2)
         else
-            f = 1
+            flag = 1
             break
         end
     end
-    if f == 1
-        v_ugol_schet!(rob, HorizonSide(mod(Int(side1)+ 2, 4)), HorizonSide(mod(Int(side2)+ 2, 4)))
-        nmove!(rob, side2, n2)
-        nmove!(rob, side1, n1)
+    if flag == 1
+        v_ugol!(robot, HorizonSide(mod(Int(side1)+ 2, 4)), HorizonSide(mod(Int(side2)+ 2, 4)))
+        move!(robot, side2, shagov_v_side2)
+        move!(robot, side1, shagov_v_side1)
     end
 end
 
-function nmove!(rob, side, n)
-    for i in 1:n
-        move!(rob, side)
+function HorizonSideRobots.move!(robot, side, num)
+    for i in 1:num
+        move!(robot, side)
     end
 end
 
-two_per!(r)
+function v_ugol!(robot, side1, side2)
+    koordinaty_po_side1, koordinaty_po_side2 =  0, 0
+    while ! isborder(robot, side2)
+        move!(robot, side2)
+        koordinaty_po_side2 += 1
+    end
+    while ! isborder(robot, side1)
+        move!(robot, side1)
+        koordinaty_po_side1 += 1
+    end
+    return koordinaty_po_side1, koordinaty_po_side2
+end
+
+
+dva_perimetra_i_na_start!(r)

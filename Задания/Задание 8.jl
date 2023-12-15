@@ -1,5 +1,5 @@
 using HorizonSideRobots
-r = Robot("Zadania8,17.sit", animate = true)
+r = Robot("Zadania_8,17.sit", animate = true)
 
 function findmark!(robot)
     side = Ost

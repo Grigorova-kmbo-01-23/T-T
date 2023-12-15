@@ -1,13 +1,13 @@
 using HorizonSideRobots
 r = Robot("untitled.sit", animate = true)
 
-function prohod!(r)
-    n = 1
-    s = Ost
-    while isborder(r, Nord)
-        nmove!(r, s, n)
-        n += 1
-        s = inverse(s)
+function prohod!(robot)
+    dlina_shaga = 1
+    side = Ost
+    while isborder(robot, Nord)
+        move!(robot, side, dlina_shaga)
+        dlina_shaga += 1
+        side = inverse(side)
     end
 end
 
@@ -15,10 +15,10 @@ function inverse(s)
     return HorizonSide(mod(Int(s) + 2, 4))
 end
 
-function nmove!(r, side, n)
-    for i in 1:n
-        if !isborder(r, side)
-            move!(r, side)
+function HorizonSideRobots.move!(robot, side, num)
+    for i in 1:num
+        if isborder(robot, side)
+           move!(robot, side)
         end
     end
 end

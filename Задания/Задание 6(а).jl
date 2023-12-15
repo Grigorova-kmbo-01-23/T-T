@@ -1,45 +1,45 @@
 using HorizonSideRobots
 r = Robot("untitled.sit", animate=true) 
 
-function perimetr_obr!(r)
-    p = v_ugol_put!(r, Sud, West)
-    per!(r)
-    obratno!(r, Nord, Ost, p)
+function perimetr_i_na_start!(robot)
+    put = v_ugol_i_put!(robot, Sud, West)
+    perimetr!(robot)
+    na_start!(robot, Nord, Ost, put)
 end
 
-function per!(r)
+function perimetr!(robot)
     for i in [Nord, Ost, Sud, West]
-        while isborder(r, i) == false
-            move!(r, i)
-            putmarker!(r)
+        while isborder(robot, i) == false
+            move!(robot, i)
+            putmarker!(robot)
         end
     end
 end
 
-function v_ugol_put!(r, side1, side2)
-    p = ""
-    while !(isborder(r, side1) & isborder(r, side2))
-        if ! isborder(r, side1)
-            move!(r, side1)
-            p = p * "0" 
+function v_ugol_i_put!(robot, side1, side2)
+    put = ""
+    while !(isborder(robot, side1) & isborder(robot, side2))
+        if ! isborder(robot, side1)
+            move!(robot, side1)
+            put = put * "0" 
         end    
-        if ! isborder(r, side2)
-            move!(r, side2) 
-            p = p * "1"
+        if ! isborder(robot, side2)
+            move!(robot, side2) 
+            put = put * "1"
         end  
     end 
-    return p
+    return put
 end
 
-function obratno!(r, side1, side2, p::String)
-    p = reverse(p)
-    for i in p
-        if i == '0'
-            move!(r, side1)
+function na_start!(robot, side1, side2, put::String)
+    put = reverse(put)
+    for shag in put
+        if shag == '0'
+            move!(robot, side1)
         else
-            move!(r, side2)
+            move!(robot, side2)
         end
     end
 end
 
-perimetr_obr!(r)
+perimetr_i_na_start!(r)

@@ -1,75 +1,78 @@
 using HorizonSideRobots
-r = Robot("untitled.sit", animate=true) 
+r = Robot("Zadanie5.sit", animate=true) 
 
-function perimetr_obr!(r)
-    p, v, g = v_ugol_put_i_schet!(r, Sud, West)
-    print(v)
-    proecii!(r, Sud, v, West, g)
-    v_ugol!(r, Sud, West)
-    obratno!(r, Nord, Ost, p)
+function proecii_i_na_start!(robot)
+    put, shagov_po_vertikali, shagov_po_gorizontali  = v_ugol_put_i_schet!(r, Sud, West)
+    proecii!(robot, Sud, shagov_po_vertikali, West, shagov_po_gorizontali)
+    v_ugol!(robot, Sud, West)
+    na_start!(robot, Nord, Ost, put)
 end
 
-function proecii!(r, side1, n1, side2, n2)
+function proecii!(robot, side1, koordinaty_po_side1, side2, koordinaty_po_side2)
     for i in [side2, inverse(side2)]
-        v_ugol!(r, side1, i)
-        nmove!(r, inverse(side1), n1)
-        putmarker!(r)
+        v_ugol!(robot, side1, i)
+        move!(robot, inverse(side1), koordinaty_po_side1)
+        putmarker!(robot)
     end
     for i in [side1, inverse(side1)]
-        v_ugol!(r, side2, i)
-        nmove!(r, inverse(side2), n2)
-        putmarker!(r)
+        v_ugol!(robot, side2, i)
+        move!(robot, inverse(side2), koordinaty_po_side2)
+        putmarker!(robot)
     end
 end
 
-function v_ugol!(r, side1, side2)
-    while !(isborder(r, side1) & isborder(r, side2))
-        if ! isborder(r, side1)
-            move!(r, side1)
+function v_ugol!(robot, side1, side2)
+    while !v_uglu!(robot, side1, side2)
+        if ! isborder(robot, side1)
+            move!(robot, side1)
         end    
-        if ! isborder(r, side2)
-            move!(r, side2) 
+        if ! isborder(robot, side2)
+            move!(robot, side2) 
         end  
     end 
 end
 
-function v_ugol_put_i_schet!(r, side1, side2)
-    p = ""
-    n1, n2 = 0, 0
-    while !(isborder(r, side1) & isborder(r, side2))
+function v_ugol_put_i_schet!(robot, side1, side2)
+    put = ""
+    shagov_po_side1, shagov_po_side2 = 0, 0
+    while !v_uglu!(robot, side1, side2)
         if ! isborder(r, side1)
-            move!(r, side1)
-            p = p * "0" 
-            n1 += 1
+            move!(robot, side1)
+            put = put * "0" 
+            shagov_po_side1 += 1
         end    
-        if ! isborder(r, side2)
-            move!(r, side2) 
-            p = p * "1"
-            n2 += 1
+        if ! isborder(robot, side2)
+            move!(robot, side2) 
+            put = put * "1"
+            shagov_po_side2 += 1
         end  
     end 
-    return p, n1, n2
+    return put, shagov_po_side1, shagov_po_side2
 end
 
-function obratno!(r, side1, side2, p::String)
+function na_start!(robot, side1, side2, p::String)
     p = reverse(p)
     for i in p
         if i == '0'
-            move!(r, side1)
+            move!(robot, side1)
         else
-            move!(r, side2)
+            move!(robot, side2)
         end
     end
 end
 
-function inverse(s)
-    return HorizonSide(mod(Int(s) + 2,4))
+function inverse(side)
+    return HorizonSide(mod(Int(side) + 2,4))
 end
 
-function nmove!(rob, side, n)
-    for i in 1:n
-        move!(rob, side)
+function HorizonSideRobots.move!(robot, side, num)
+    for i in 1:num
+        move!(robot, side)
     end
 end
 
-perimetr_obr!(r)
+function v_uglu!(robot, side1, side2)
+    return (isborder(robot, side1) & isborder(robot, side2))
+end
+
+proecii_i_na_start!(r)
